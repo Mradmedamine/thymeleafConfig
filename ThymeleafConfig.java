@@ -92,8 +92,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 				Map<String, Object> templateResolutionAttributes, IContext context) {
 			IEngineContext engineCtx = delegate.createEngineContext(configuration, templateData,
 					templateResolutionAttributes, context);
-			if (!engineCtx
-					.containsVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME)) {
+			if (!engineCtx.containsVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME)) {
 				EvaluationContext evaluationContext = new StandardEvaluationContext();
 				StandardTypeLocator typeLocator = (StandardTypeLocator) evaluationContext.getTypeLocator();
 				for (String prefix : typeLocatorPrefixes) {
