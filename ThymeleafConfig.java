@@ -64,7 +64,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 	private IEngineContextFactory engineContextFactory() {
 		return new CustomEngineContextFactory()
 				// packages to register
-				.registerImport("xxx.yyy")
+				.registerImport("com.thymeleafexamples.thymeleaf3.web")
 				.registerImport("xxx.yyy.zzz");
 	}
 
@@ -92,14 +92,15 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 				Map<String, Object> templateResolutionAttributes, IContext context) {
 			IEngineContext engineCtx = delegate.createEngineContext(configuration, templateData,
 					templateResolutionAttributes, context);
-			if (!engineCtx.containsVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME)) {
-				EvaluationContext evaluationContext = new StandardEvaluationContext();
-				StandardTypeLocator typeLocator = (StandardTypeLocator) evaluationContext.getTypeLocator();
-				for (String prefix : typeLocatorPrefixes) {
-					typeLocator.registerImport(prefix);
-				}
-				engineCtx.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
-						new ThymeleafEvaluationContextWrapper(evaluationContext));
+			EvaluationContext evaluationContext;
+			if (engineCtx.containsVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME)) {
+				evaluationContext = (EvaluationContext) engineCtx
+						.getVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME);
+			} else {
+				throw new IllegalStateException();
+			}
+			for (String prefix : typeLocatorPrefixes) {
+				((StandardTypeLocator) evaluationContext.getTypeLocator()).registerImport(prefix);
 			}
 			return engineCtx;
 		}
